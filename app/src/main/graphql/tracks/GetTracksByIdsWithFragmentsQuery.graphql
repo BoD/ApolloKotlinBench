@@ -1,0 +1,43 @@
+query GetTracksByIdsWithFragmentsQuery($trackIds: [String!]!) {
+    tracksByIds(ids: $trackIds) {
+        ...TrackDetailFragment
+        album {
+            cover {
+                ...PictureMD5Fragment
+            }
+        }
+        contributors(first: 1, roles: [MAIN]) {
+            edges {
+                roles
+                node {
+                    ... on Artist {
+                        ...ArtistNameFragment
+                    }
+                }
+            }
+        }
+    }
+}
+
+fragment ArtistNameFragment on Artist {
+    id
+    name
+}
+
+fragment PictureMD5Fragment on Picture {
+    md5
+    explicitStatus
+}
+
+fragment TrackDetailFragment on Track {
+    id
+    title
+    duration
+    gain
+    bpm
+    popularity
+    releaseDate
+    isExplicit
+    isFavorite
+    isBannedFromRecommendation
+}
