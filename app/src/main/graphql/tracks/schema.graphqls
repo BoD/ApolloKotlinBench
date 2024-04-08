@@ -1,0 +1,100 @@
+type Query {
+    node(id: ID!): Node
+
+    tracksByIds(ids: [String!]!): [Track]!
+}
+
+type Track implements Node {
+    id: ID!
+
+    title: String!
+
+    duration: Int!
+
+    gain: Float
+
+    bpm: Float
+
+    popularity: Float
+
+    releaseDate: Date
+
+    album: Album
+
+    contributors(first: Int = 10, after: String, cursor: String, roles: [TrackContributorRoles!] = [MAIN,FEATURED], rolesOrder: [TrackContributorRoles!] = [MAIN,FEATURED]): TrackContributorsConnection!
+
+    isFavorite: Boolean
+
+    isBannedFromRecommendation: Boolean
+
+    isExplicit: Boolean!
+}
+
+type Album implements Node {
+    id: ID!
+
+    cover(pictureRequest: PictureRequest): Picture
+}
+
+type Picture {
+    md5: String! @deprecated(reason: "Use urls directly, or prefer using uid for identification. md5 for migration purpose only")
+
+    explicitStatus: Boolean!
+}
+
+type Artist implements Node {
+    id: ID!
+    name: String!
+}
+
+enum TrackContributorRoles {
+    MAIN
+
+    SECONDARY
+
+    AUTHOR
+
+    FEATURED
+
+    COMPOSER
+
+    CONDUCTOR
+
+    ORCHESTRA
+}
+
+type TrackContributorsConnection {
+    edges: [TrackContributorsEdge!]!
+
+    pageInfo: PageInfo!
+}
+
+type TrackContributorsEdge {
+    cursor: String!
+
+    roles: [TrackContributorRoles!]!
+
+    node: Contributor!
+}
+
+union Contributor = Artist
+
+type PageInfo {
+    hasNextPage: Boolean!
+
+    hasPreviousPage: Boolean!
+
+    startCursor: String
+
+    endCursor: String
+}
+
+interface Node {
+    id: ID!
+}
+
+scalar Date
+
+input PictureRequest {
+    width: Int!
+}

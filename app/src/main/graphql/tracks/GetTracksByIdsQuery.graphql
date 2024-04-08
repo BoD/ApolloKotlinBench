@@ -1,0 +1,31 @@
+query GetTracksByIds($trackIds: [String!]!) {
+    tracksByIds(ids: $trackIds) {
+        id
+        title
+        duration
+        gain
+        bpm
+        popularity
+        releaseDate
+        isExplicit
+        isFavorite
+        isBannedFromRecommendation
+        album {
+            cover {
+                md5
+                explicitStatus
+            }
+        }
+        contributors(first: 1, roles: [MAIN]) {
+            edges {
+                roles
+                node {
+                    ... on Artist {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    }
+}
